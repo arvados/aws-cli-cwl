@@ -18,11 +18,12 @@ outputs:
 expression: |
   ${
   var batches = [];
-  for (var i = 0; i < inputs.count; i++) {
+  var batchcount = Math.min(inputs.count, inputs.urls.length);
+  for (var i = 0; i < batchcount; i++) {
     batches.push([]);
   }
   for (var n = 0; n < inputs.urls.length; n++) {
-    batches[n % inputs.count].push(inputs.urls[n]);
+    batches[n % batchcount].push(inputs.urls[n]);
   }
   return {"batches": batches};
   }

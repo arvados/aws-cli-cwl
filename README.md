@@ -53,9 +53,11 @@ Here is what the input.yml file should look like:
 # List of File objects to upload
 files:
   - class: File
+    # local file
     location: file1.txt
   - class: File
-    location: file2.txt
+    # file in keep
+    location: keep:3c1ffefa04e684405dcb7e0c77830038+129/file2.txt
 
 # The target s3:// URL to upload to
 # This is a string prefix to which the file name is appended

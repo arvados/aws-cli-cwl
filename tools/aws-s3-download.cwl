@@ -11,7 +11,7 @@ inputs:
   aws_secret_access_key: string
   endpoint: string?
   ramMin:
-    type: int
+    type: int?
     default: 1000
 
 requirements:
@@ -34,15 +34,15 @@ requirements:
         entry: |
           ${
           // cwltool expression scanner has trouble with unbalanced quotes, the workaround
-          // is adding the comment on the next line
+          // is adding trailing comment on the next line
           var rx = /['\\]/g; // '
-          var quote = function(s) { return "'"+s.replace(rx, "")+"'"; }
+          var sanitize = function(s) { return "'"+s.replace(rx, "")+"'"; }
           var endpoint = "";
           if (inputs.endpoint) {
-            endpoint = "--endpoint "+quote(inputs.endpoint);
+            endpoint = "--endpoint "+sanitize(inputs.endpoint);
           }
           var commands = inputs.s3urls.map(function(url) {
-            return "aws s3 cp "+endpoint+" --no-progress "+quote(url)+" "+quote(url.split('/').pop());
+            return "aws s3 cp "+endpoint+" --no-progress "+sanitize(url)+" "+sanitize(url.split('/').pop());
           });
           commands.unshift("set -e");
           commands.push("");
