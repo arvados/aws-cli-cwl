@@ -7,8 +7,8 @@ $namespaces:
 
 inputs:
   s3urls: string[]
-  aws_access_key_id: string
-  aws_secret_access_key: string
+  aws_access_key_id: string?
+  aws_secret_access_key: string?
   endpoint: string?
   ramMin:
     type: int?
@@ -25,6 +25,11 @@ requirements:
     ramMin: $(inputs.ramMin)
   InitialWorkDirRequirement:
     listing:
+      - entryname: .aws/config
+        entry: |
+          [profile default]
+          s3 =
+            multipart_chunksize = 64MB
       - entryname: .aws/credentials
         entry: |
           [default]
@@ -38,13 +43,17 @@ requirements:
           var rx = /['\\]/g; // '
           var sanitize = function(s) { return "'"+s.replace(rx, "")+"'"; }
           var endpoint = "";
+          var no_sign = "";
           if (inputs.endpoint) {
             endpoint = "--endpoint "+sanitize(inputs.endpoint);
           }
+          if (!inputs.aws_access_key_id) {
+            no_sign = "--no-sign-request";
+          }
           var commands = inputs.s3urls.map(function(url) {
-            return "aws s3 cp "+endpoint+" --no-progress "+sanitize(url)+" "+sanitize(url.split('/').pop());
+            return "aws s3 cp "+endpoint+" "+no_sign+" --no-progress "+sanitize(url)+" "+sanitize(url.split('/').pop());
           });
-          commands.unshift("set -e");
+          commands.unshift("set -ex");
           commands.push("");
           return commands.join("\n");
           }

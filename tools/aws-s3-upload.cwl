@@ -47,7 +47,7 @@ requirements:
           var commands = inputs.files.map(function(file) {
             return "aws s3 cp "+endpoint+" --no-progress "+sanitize(file.path)+" "+sanitize(inputs.s3target+file.basename);
           });
-          commands.unshift("set -e");
+          commands.unshift("set -ex");
           commands.push("");
           return commands.join("\n");
           }
