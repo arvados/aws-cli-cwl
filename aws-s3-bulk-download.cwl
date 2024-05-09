@@ -37,10 +37,10 @@ inputs:
     default: 1
     label: "Number of downloader processes to use"
   aws_access_key_id:
-    type: string
+    type: string?
     label: "AWS access key id"
   aws_secret_access_key:
-    type: string
+    type: string?
     label: "AWS secret access key"
   endpoint:
     type: string?
