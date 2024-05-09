@@ -29,6 +29,7 @@ requirements:
         entry: |
           [profile default]
           s3 =
+            max_concurrent_requests = 1
             multipart_chunksize = 64MB
       - entryname: .aws/credentials
         entry: |
